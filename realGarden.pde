@@ -8,7 +8,6 @@ insectParticleSystem insectPS;
 
 color skya, skyb;
 
-
 void setup() {
   size(1000, 800);
   tree1 = new tree(width/2+width/4, height, height/4);
