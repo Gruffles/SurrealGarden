@@ -4,7 +4,6 @@ class grass {
   float windX = 0;
   float windY = 0;
 
-
   grass(float _x, float _l) {
     rootX = _x;
     rootY = height;
@@ -14,6 +13,7 @@ class grass {
     stroke(45,50,45,90);
     strokeWeight(2);
     fill(45,50,45,90);
+    
     beginShape();
     curveVertex(rootX, rootY);
     curveVertex(rootX, rootY);

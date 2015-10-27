@@ -1,5 +1,6 @@
 class moon
 {
+  
   void displayMoon()
   {
     noStroke();

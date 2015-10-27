@@ -1,28 +1,24 @@
 tree tree1;
 tree tree2;
-
 ArrayList<grass> grasses = new ArrayList<grass>(); //lol at grasses
-
 wind wind;
 insectParticleSystem insectPS;
+sky sky = new sky();
 
-color skya, skyb;
 
 void setup() {
   size(1000, 800);
   tree1 = new tree(width/2+width/4, height, height/4);
   tree2 = new tree(width/4, height, height/4);
-  for (int i = 0; i < width; i += random(1, 7)) {
+  for (int i = 0; i < width; i += random(1, 10)) {
     grasses.add(new grass(i, random(5,50)));
   }
   wind = new wind(new PVector(1, 1, 1));
   insectPS = new insectParticleSystem(wind);
-  skya = color(200,230,255,80);
-  skyb = color(60,80,100,60);
 }
 
 void draw() {
-  background(skyb);
+  sky.update();
   stroke(255, 0, 255);
   line(width/2, height/2, width/2+wind.getx()*5, height/2+wind.gety()*5);
   stroke(0);
