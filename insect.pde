@@ -25,6 +25,7 @@ class insectParticleSystem
   
   void update()
   {
+    addInsect();
     for (int i = insects.size()-1; i >= 0; i--) {
       insect p = insects.get(i);
       p.run();

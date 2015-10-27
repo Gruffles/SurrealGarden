@@ -26,36 +26,15 @@ void draw() {
   stroke(255, 0, 255);
   line(width/2, height/2, width/2+wind.getx()*5, height/2+wind.gety()*5);
   stroke(0);
-  windUpdate();
-  treeUpdate(tree1);
-  treeUpdate(tree2);
-  insectUpdate(insectPS);
+  wind.update();
+  tree1.update(wind.getPVector());
+  tree2.update(wind.getPVector());
+  insectPS.update(); 
   
   for (grass grass : grasses){
-     grassUpdate(grass); 
+     grass.update(wind.getx(), wind.gety());
      //println("yep");
   }
-}
-
-void insectUpdate(insectParticleSystem ips)
-{
-   ips.addInsect();
-   ips.update(); 
-}
-
-void treeUpdate(tree currentTree) {
-  currentTree.beAtracted(wind.getPVector());
-  currentTree.update();
-  currentTree.display();
-}
-
-void grassUpdate(grass currentGrass) {
- currentGrass.update(wind.getx(), wind.gety()); 
- currentGrass.display(); 
-}
-
-void windUpdate() {
-  wind.update();
   
 }
 

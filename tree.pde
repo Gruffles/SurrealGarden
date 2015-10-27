@@ -98,7 +98,12 @@ class tree {
     }
   }
   
-  void update() {//update, this branch, and all of it's children
+  void update(PVector wind) {
+    beAtracted(wind);
+    branchUpdate();
+    display();
+  }
+  void branchUpdate(){//update, this branch, and all of it's children
     if (parent != null) {
       rootX = parent.getTopX();
       rootY = parent.getTopY();
@@ -115,9 +120,10 @@ class tree {
 
     if (children != null) {
       for (int i = 0; i < children.length; i++) {
-        children[i].update();
+        children[i].branchUpdate();
       }
     }
+    
   }
   PVector beAtracted(PVector _targetForce) {
     targetForce.set(_targetForce);

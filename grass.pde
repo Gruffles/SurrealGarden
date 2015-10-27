@@ -31,5 +31,6 @@ class grass {
   void update(float _wx, float _wy) {
     windX = _wx;
     windY = _wy;
+    display(); 
   }
 }
