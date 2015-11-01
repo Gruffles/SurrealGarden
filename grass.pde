@@ -1,36 +1,39 @@
 class grass {
   float rootX, rootY;
   float len;
-  float windX = 0;
-  float windY = 0;
+  float wind = 0;
+  float curve;
+  boolean direction;
+
 
   grass(float _x, float _l) {
     rootX = _x;
     rootY = height;
     len = _l;
+    curve = random(1, 10);
+    direction = (random(1) > .5);
   }
   void display() {
-    stroke(45,50,45,90);
-    strokeWeight(2);
-    fill(45,50,45,90);
-    
+    stroke(0);
+    strokeWeight(1);
+    fill(0);
     beginShape();
     curveVertex(rootX, rootY);
+    curveVertex(rootX+(wind/6), rootY-(len/2));
+    curveVertex(rootX+(wind/3), rootY-len);
+    if (direction){
+      curveVertex(rootX-curve, rootY);
+      curveVertex(rootX-(curve/2), rootY);
+    }
+    else {
+     curveVertex(rootX+curve, rootY); 
+     curveVertex(rootX+(curve/2), rootY); 
+    }
     curveVertex(rootX, rootY);
-    curveVertex(rootX+windX*0.5*len/10, rootY-len+windY*0.2);
-    curveVertex(rootX+windX*1.2*len/10, rootY-len+windY*0.3);
-    vertex(rootX+5, rootY);
-    curveVertex(rootX+len/5, rootY);
-    curveVertex(rootX+len/5, rootY);
-    curveVertex(rootX+windX*0.5*len/10, rootY-len+windY*0.2);
-    curveVertex(rootX+windX*1.2*len/10, rootY-len+windY*0.3);
-    vertex(rootX, rootY);
     endShape();
   }
-  
-  void update(float _wx, float _wy) {
-    windX = _wx;
-    windY = _wy;
-    display(); 
+
+  void update(float _w) {
+    wind = _w;
   }
 }

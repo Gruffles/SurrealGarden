@@ -3,9 +3,8 @@ class tree {
   float ang, prefAng;
   float branchLength;
   int numberChild;
-  int tier;
   float angle = -HALF_PI;
-  float maxAng = HALF_PI*0.75;
+  float maxAng = HALF_PI;
 
 
   float resistance;//the resistance of the branch, when moved
@@ -22,36 +21,34 @@ class tree {
     rootX = _x;
     rootY = _y;
     parent=null;
-    tier = 1;
     prefAng = angle;
-    numberChild = (int) random(2, 3);
-    resistance=150;
-    flyBackForce=0.9;
+    numberChild = (int) random(2, 4);
+    resistance=100;
+    flyBackForce=0.1;
     branchLength=_l;
     children = new tree[numberChild];
     for (int i = 0; i < numberChild; i++) {
-      children[i] = new tree(this, flyBackForce/1.4, resistance/1.4, branchLength/1.4, maxAng*(random(75, 125)/100), random(-maxAng/2, maxAng/2));
+      children[i] = new tree(this, branchLength/1.7, maxAng*(random(75, 125)/100), random(-maxAng/2, maxAng/2));
     }
+    resistance=1000;
     targetForce=new PVector(0, 0, 0);
     remainder=new PVector(0, 0, 0);
   }
 
 
-  tree(tree _parent, float fbf, float res, float _l, float maxAng, float _ang) {//make a branch from a parent branch
+  tree(tree _parent, float _l, float maxAng, float ang) {//make a branch from a parent branch
     rootX = _parent.getTopX();
     rootY = _parent.getTopY();
     parent=_parent;
-    tier = _parent.tier + 1;
-    ang = _ang;  
-    prefAng = _ang;
-    numberChild = (int) random(tier, 1.5*tier);
-    resistance=res;
-    flyBackForce=fbf;
+    prefAng = ang;
+    numberChild = (int) random(2, 4);
+    resistance=100;
+    flyBackForce=0.1;
     branchLength=_l;
-    if (tier<random(3, 8)) {
+    if (branchLength>random(2, 40)) {
       children = new tree[numberChild];
       for (int i = 0; i < numberChild; i++) {
-        children[i] = new tree(this, fbf/1.1, res/1.2, branchLength/(1+random(0,1.5)), maxAng*(random(75, 125)/100), random(-maxAng, maxAng));
+        children[i] = new tree(this, branchLength/1.7, maxAng*(random(75, 125)/100), random(-maxAng/2, maxAng/2));
       }
     } else {
       children = null;
@@ -60,7 +57,7 @@ class tree {
     remainder=new PVector(0, 0, 0);
   }
 
-
+  //This code is from https://github.com/nikolajRoager/windyTree
   float getAng() {
     if (parent!=null) {
       return ang+parent.getAng();
@@ -85,25 +82,33 @@ class tree {
   }
 
   void display() {
-    stroke(2,10,0,99);
-    fill(0,10,0);
-    float girth = 16/tier;
-    float tipGirth = 8/tier;
-    quad(rootX-girth/2, rootY, rootX+girth/2, rootY, getTopX()+tipGirth/2, getTopY(), getTopX()-tipGirth/2, getTopY());
-    //line(rootX, rootY, getTopX(), getTopY());
+    strokeWeight(branchLength/10);
+    line(rootX, rootY, getTopX(), getTopY());
     if (children != null) {
       for (int i = 0; i < children.length; i++) {
         children[i].display();
       }
     }
+
+
+
+    float distance=ang-prefAng;//the angular distance, between the prefered angle, and the angle
+    distance*= (distance>0) ? 1 : -1;
+    if (ang>prefAng+0.001) {
+      ang-=flyBackForce*distance;
+    } else if (ang<prefAng-0.001) {
+      ang+=flyBackForce*distance;
+    } else {
+      ang=prefAng;
+    }
+
+    if (children != null) {
+      for (int i = 0; i < children.length; i++) {
+        children[i].update();
+      }
+    }
   }
-  
-  void update(PVector wind) {
-    beAtracted(wind);
-    branchUpdate();
-    display();
-  }
-  void branchUpdate(){//update, this branch, and all of it's children
+  void update() {//update, this branch, and all of it's children
     if (parent != null) {
       rootX = parent.getTopX();
       rootY = parent.getTopY();
@@ -120,14 +125,12 @@ class tree {
 
     if (children != null) {
       for (int i = 0; i < children.length; i++) {
-        children[i].branchUpdate();
+        children[i].update();
       }
     }
-    
   }
   PVector beAtracted(PVector _targetForce) {
     targetForce.set(_targetForce);
-    targetForce.y = getBaseY();
     float angToMove=0;//the angle to move
     if (children != null) {
       for (int i = 0; i < children.length; i++) {
